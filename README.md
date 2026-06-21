@@ -37,15 +37,30 @@ Fraud Investigator
 - Real-Time Log Source
 </> SQL
   From core.fact_user_log
-
 - Device Mapping: 
 </> SQL
   CASE
   WHEN REGEXP_CONTAINS(...)
   ...
   END
-
 - Timezone Handling
 </> SQL
   FORMAT_DATETIME(...)
 
+**6. Impact**
+
+- Removed 24-hour reporting latency
+- Eliminated manual device lookups
+- Reduced fraud investigation time by an estimated 2–5 minutes per case
+- Enabled self-service reporting for customer support teams
+
+**7. Skills Demonstrated**
+
+- SQL (BigQuery)
+- Data Transformation
+- Regex Pattern Matching
+- Fraud Analytics
+- Event Log Analysis
+- Business Intelligence (Metabase)
+- Timezone Normalisation
+- Stakeholder-Focused Reporting
