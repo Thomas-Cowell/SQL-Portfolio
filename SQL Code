@@ -1,0 +1,141 @@
+SELECT
+    u.operating_country,
+    CAST(u.user_id AS STRING) AS userId,
+    u.first_name,
+    u.last_name,
+    u.activation_timestamp,
+    u.email,
+    u.user_status,
+    ul.event_category_id,
+    ul.login_platform,
+    CONCAT(ec.subCategory, ' ; ', ec.description) AS actionType,
+
+    FORMAT_DATETIME(
+        "%Y-%m-%d %H:%M:%S",
+        DATETIME(ul.created_timestamp, u.timezone_name)
+    ) AS Local_login_timestamp,
+
+    FORMAT_TIMESTAMP(
+        "%Y-%m-%d %H:%M:%S",
+        ul.created_timestamp
+    ) AS UTC_login_timestamp,
+
+    ul.description AS verification_method,
+    ul.ip_address,
+
+    -- Device mapping
+    CASE
+    
+    -- iPhone hardware identifiers
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone1,1') THEN 'iPhone'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone1,2') THEN 'iPhone 3G'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone2,1') THEN 'iPhone 3GS'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone3,1') THEN 'iPhone 4'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone3,2') THEN 'iPhone 4 GSM Rev A'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone3,3') THEN 'iPhone 4 CDMA'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone4,1') THEN 'iPhone 4S'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone5,1') THEN 'iPhone 5 (GSM)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone5,2') THEN 'iPhone 5 (GSM+CDMA)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone5,3') THEN 'iPhone 5C (GSM)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone5,4') THEN 'iPhone 5C (Global)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone6,1') THEN 'iPhone 5S (GSM)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone6,2') THEN 'iPhone 5S (Global)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone7,1') THEN 'iPhone 6 Plus'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone7,2') THEN 'iPhone 6'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone8,1') THEN 'iPhone 6s'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone8,2') THEN 'iPhone 6s Plus'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone8,4') THEN 'iPhone SE (1st Gen)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone9,1|iPhone9,3') THEN 'iPhone 7'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone9,2|iPhone9,4') THEN 'iPhone 7 Plus'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone10,1|iPhone10,4') THEN 'iPhone 8'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone10,2|iPhone10,5') THEN 'iPhone 8 Plus'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone10,3') THEN 'iPhone X (Global)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone10,6') THEN 'iPhone X (GSM)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone11,2') THEN 'iPhone XS'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone11,4|iPhone11,6') THEN 'iPhone XS Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone11,8') THEN 'iPhone XR'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone12,1') THEN 'iPhone 11'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone12,3') THEN 'iPhone 11 Pro'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone12,5') THEN 'iPhone 11 Pro Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone12,8') THEN 'iPhone SE (2nd Gen)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone13,1') THEN 'iPhone 12 Mini'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone13,2') THEN 'iPhone 12'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone13,3') THEN 'iPhone 12 Pro'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone13,4') THEN 'iPhone 12 Pro Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone14,2') THEN 'iPhone 13 Pro'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone14,3') THEN 'iPhone 13 Pro Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone14,4') THEN 'iPhone 13 Mini'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone14,5') THEN 'iPhone 13'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone14,6') THEN 'iPhone SE (3rd Gen)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone14,7') THEN 'iPhone 14'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone14,8') THEN 'iPhone 14 Plus'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone15,2') THEN 'iPhone 14 Pro'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone15,3') THEN 'iPhone 14 Pro Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone15,4') THEN 'iPhone 15'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone15,5') THEN 'iPhone 15 Plus'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone16,1') THEN 'iPhone 15 Pro'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone16,2') THEN 'iPhone 15 Pro Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone17,1') THEN 'iPhone 16 Pro'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone17,2') THEN 'iPhone 16 Pro Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone17,3') THEN 'iPhone 16'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone17,4') THEN 'iPhone 16 Plus'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone17,5') THEN 'iPhone 16e'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone18,1') THEN 'iPhone 17 Pro'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone18,2') THEN 'iPhone 17 Pro Max'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone18,3') THEN 'iPhone 17'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPhone18,4') THEN 'iPhone Air'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad13,4|iPad13,5|iPad13,6|ipad13,7') THEN 'iPad pro 11 inch 5th Gen'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad13,8|iPad13,9|iPad13,10|iPad13,11') THEN 'iPad Pro 12.9 inch 5th Gen'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad13,16') THEN 'iPad Air 5th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad13,17') THEN 'iPad Air 5th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad13,18') THEN 'iPad 10th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad13,19') THEN 'iPad 10th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,3') THEN 'iPad Pro 11 inch 4th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,4') THEN 'iPad Pro 11 inch 4th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,5') THEN 'iPad Pro 12.9 inch 6th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,6') THEN 'iPad Pro 12.9 inch 6th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,8') THEN 'iPad Air 11 inch 6th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,9') THEN 'iPad Air 11 inch 6th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,10') THEN 'iPad Air 13 inch 6th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad14,11') THEN 'iPad Air 13 inch 6th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad15,3') THEN 'iPad Air 11 inch 7th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad15,4') THEN 'iPad Air 11 inch 7th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad15,5') THEN 'iPad Air 13 inch 7th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad15,6') THEN 'iPad Air 13 inch 7th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad15,7') THEN 'iPad 11th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad15,8') THEN 'iPad 11th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad16,1') THEN 'iPad mini 7th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad16,2') THEN 'iPad mini 7th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad16,3') THEN 'iPad Pro 11 inch 5th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad16,4') THEN 'iPad Pro 11 inch 5th Gen (WiFi+Cellular)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad16,5') THEN 'iPad Pro 12.9 inch 7th Gen (WiFi)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'iPad16,6') THEN 'iPad Pro 12.9 inch 7th Gen (WiFi+Cellular)'
+    
+     -- Only if the value is literally "iPhone" or "Mozilla"
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'^\s*iPhone\s*$') THEN 'iPhone (Unknown Model)'
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'^\s*Mozilla\s*$') THEN 'Mozilla'
+
+    -- Generic iPhone UA strings (no hardware identifier present)
+    WHEN REGEXP_CONTAINS(ul.user_agent, r'\biPhone\b') THEN ul.user_agent
+
+    -- EXACT iPhone → raw
+    WHEN ul.user_agent = 'iPhone' THEN ul.user_agent
+
+    -- NOT an iPhone at all → raw
+    WHEN NOT REGEXP_CONTAINS(ul.user_agent, r'\biPhone\b') THEN ul.user_agent
+
+END AS Device_Description
+FROM `core.dim_user` u
+-- changed to be fact_userLog 11/11/.2025  
+INNER JOIN `core.fact_user_log` ul -- The underlying table for this is USER_Log 
+    ON ul.user_id = u.user_id
+    AND ul.event_category_id IN (1,2)
+INNER JOIN `core.map_event_category_groupings` ec 
+    ON ec.id = ul.event_category_id
+    AND ec._operating_country = u.operating_country
+    AND ec.account_type = u.primary_relation_type
+    AND _is_latest
+WHERE 
+u.operating_country = 'UK'
+AND u.user_id = {{user_id}}
+ORDER BY ul.created_timestamp desc
