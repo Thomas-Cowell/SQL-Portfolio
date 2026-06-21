@@ -14,7 +14,7 @@ The Member Service team relies heavily on account login logs to trace suspicious
 I entirely refactored the underlying script to establish a direct connection to live transactional logs, standardising timestamps to local context and automating text parsing directly within the query.
 Key Technical Improvements:
 - Zero Data Latency: Shifted the data source to the live core.fact_user_log table, providing immediate data availability for high-urgency fraud investigations.
-- Regex Hardware Extraction: Developed a comprehensive conditional structure utilising REGEXP_CONTAINS to instantly evaluate, match, and extract exact commercial model names (up to the newest device architectures like the iPhone 17 Pro Max and iPad mini 7th Gen).
+- Regex Hardware Extraction: Built a regex-based device mapping layer that translated raw Apple hardware identifiers into analyst-friendly device names. (up to the newest device architectures like the iPhone 17 Pro Max and iPad mini 7th Gen).
 - Dual-Timezone Transparency: Implemented FORMAT_DATETIME and timezone evaluation strings to simultaneously surface UTC timestamps alongside the user's localised time, ensuring exact chronological alignment during cross-border security reviews. This is especially useful for international travel and our US users, with the company being UK-based.
 - Metabase Parameterisation: Wrapped the filter logic in a dynamic variable ({{user_id}}) so customer-facing teams could instantly execute reports without writing or reading raw SQL.
 
